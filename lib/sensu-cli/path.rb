@@ -57,9 +57,10 @@ module SensuCli
     def silence(cli)
       content = { :timestamp => Time.now.to_i }
       content.merge!(:owner => cli[:fields][:owner]) if cli[:fields][:owner]
-      content.merge!(:reason => cli[:fields][:reason]) if cli[:fields][:reason]
+      content.merge!(:description => cli[:fields][:reason]) if cli[:fields][:reason]
+      content.merge!(:expire_at => (Time.now + cli[:fields][:expire].to_i).iso8601) if cli[:fields][:expire]
+      puts(content)
       payload = { :content =>  content }
-      payload.merge!(:expire => cli[:fields][:expire].to_i) if cli[:fields][:expire]
       silence_path = 'silence'
       silence_path << "/#{cli[:fields][:client]}" if cli[:fields][:client]
       silence_path << "/#{cli[:fields][:check]}" if cli[:fields][:check]
